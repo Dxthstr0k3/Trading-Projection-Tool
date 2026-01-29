@@ -1,0 +1,120 @@
+/* Root Variables */
+:root {
+  --bg:#07090d;
+  --panel:#0f1720;
+  --muted:#9aa6b2;
+  --accent:#2dd4bf;
+  --glass: rgba(255,255,255,0.03);
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* Body */
+body {
+  margin: 0;
+  background: linear-gradient(180deg,#06080b,#0b0f14);
+  color: #e6eef3;
+  padding: 18px;
+}
+
+/* Layout */
+.container {
+  max-width: 1120px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 18px;
+}
+
+/* Header */
+header {
+  grid-column: 1 / -1;
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Panels */
+.panel {
+  background: var(--panel);
+  padding: 14px;
+  border-radius: 10px;
+}
+
+/* Forms */
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Inputs */
+input, select {
+  width: 100%;
+  padding: 10px;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: inherit;
+  border-radius: 8px;
+}
+
+/* Buttons */
+.btn {
+  background: var(--accent);
+  color: #082124;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted);
+}
+
+/* Tiles */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.tile {
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+/* Text */
+.big {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Version Badge */
+.version-badge {
+  position: fixed;
+  bottom: 12px;
+  right: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}

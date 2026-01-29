@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trading Projection Tool - Dark</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- App Container -->
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <div>
+        <h1>
+          Trading Projection Tool
+          <span class="version-text">v1</span>
+        </h1>
+        <div class="sub">
+          Reordered inputs • tile results • manual USD→ZAR • sliders + numeric precision
+        </div>
+      </div>
+      <div class="sub">Keep breathing space for readability</div>
+    </header>
+
+    <!-- Trade Inputs Panel -->
+    <section class="panel">
+      <h3>Trade Inputs</h3>
+      <div class="muted">Order: Account Size → Lot Size → Risk → Entry → TP → SL → Timeframe → Leverage → Pip Size</div>
+
+      <!-- Account & Lot -->
+      <div class="form-row">
+        <label>Account Size (USD)
+          <input id="balance" type="number" step="0.01" value="200" />
+        </label>
+        <label>Lot Size (lots)
+          <input id="lots" type="number" step="0.01" value="0.01" />
+        </label>
+      </div>
+
+      <!-- Risk & Entry -->
+      <div class="form-row">
+        <label>Risk per trade
+          <div class="inline">
+            <input id="riskValue" type="number" step="0.01" value="1" />
+            <select id="riskMode">
+              <option value="percent">Percent (%)</option>
+              <option value="currency">Currency (USD)</option>
+            </select>
+          </div>
+        </label>
+        <label>Entry Price (USD)
+          <input id="entry" type="number" step="0.01" value="4030.00" />
+        </label>
+      </div>
+
+      <!-- TP & SL -->
+      <div class="form-row">
+        <label>Take Profit (TP)
+          <div class="inline">
+            <input id="tp" type="number" step="0.01" value="4050.00" />
+            <div id="tpBadge" class="percentBadge">+50</div>
+          </div>
+        </label>
+        <label>Stop Loss (SL)
+          <div class="inline">
+            <input id="stop" type="number" step="0.01" value="4020.00" />
+            <div id="slBadge" class="percentBadge">-25</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- TP & SL Adjusters -->
+      <div class="form-row">
+        <label>TP Adjuster
+          <div class="inline">
+            <input id="tpSlider" type="range" min="-200" max="200" value="50" />
+            <input id="tpNumeric" type="number" value="50" />
+          </div>
+        </label>
+        <label>SL Adjuster
+          <div class="inline">
+            <input id="slSlider" type="range" min="-200" max="200" value="25" />
+            <input id="slNumeric" type="number" value="25" />
+          </div>
+        </label>
+      </div>
+
+      <!-- Timeframe & Leverage -->
+      <div class="form-row">
+        <label>Timeframe
+          <select id="timeframe">
+            <option value="1">1m</option>
+            <option value="5">5m</option>
+            <option value="15">15m</option>
+            <option value="60">1h</option>
+            <option value="240">4h</option>
+            <option value="1440">1D</option>
+          </select>
+        </label>
+        <label>Leverage (x)
+          <input id="leverage" type="number" value="500" />
+        </label>
+      </div>
+
+      <!-- Pip & Contract -->
+      <div class="form-row">
+        <label>Pip Size
+          <input id="pipSize" type="number" step="0.001" value="0.01" />
+        </label>
+        <label>Contract Size
+          <input id="contractSize" type="number" value="100" />
+        </label>
+      </div>
+
+      <hr />
+
+      <!-- Market Settings -->
+      <h4>Market / Rate & Live settings</h4>
+
+      <div class="form-row">
+        <label>USD ↔ ZAR rate
+          <input id="manualRate" type="number" step="0.0001" />
+        </label>
+        <label>Live Symbol
+          <input id="liveSymbol" type="text" />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>API Key (Twelve Data)
+          <input id="tdKey" type="text" />
+        </label>
+        <label>ATR Periods
+          <input id="atrPeriods" type="number" value="14" />
+        </label>
+      </div>
+
+      <!-- Controls -->
+      <div class="form-row">
+        <label>
+          <input id="instantCalc" type="checkbox" /> Instant-calc
+        </label>
+        <div class="inline">
+          <button id="calcBtn" class="btn">Calculate</button>
+          <button id="reset" class="btn secondary">Reset</button>
+          <button id="fetchLivePrice" class="btn secondary">Fetch Live</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Panel -->
+    <aside class="panel">
+      <div class="results-grid">
+
+        <div class="tile">
+          <div class="muted">Projected Profit & Loss</div>
+          <div id="projPLcontent" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Projected Balance</div>
+          <div id="projBalContent" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Pips / Ticks</div>
+          <div id="pipsDiff" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Margin Required</div>
+          <div id="marginUSD" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Risk : Reward</div>
+          <div id="rr" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Trade Direction</div>
+          <div id="tradeDir" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Currency Conversion</div>
+          <div id="rateUSDZAR" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Suggested Lots</div>
+          <div id="suggestLots" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Timeframe / Volatility</div>
+          <div id="tfEstimate" class="big">—</div>
+        </div>
+
+        <div class="tile">
+          <div class="muted">Live Price</div>
+          <div id="livePrice" class="big">—</div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Version Badge -->
+  <div class="version-badge">Trading Projection Tool v1.4.1</div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>
